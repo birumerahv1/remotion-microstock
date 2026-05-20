@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
+  <defs>
+    <linearGradient id="city" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#160b2b"/>
+      <stop offset="100%" stop-color="#3c1361"/>
+    </linearGradient>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#city)"/>
+  <g fill="#000814">
+    <rect x="100" y="500" width="120" height="580"/>
+    <rect x="260" y="420" width="160" height="660"/>
+    <rect x="460" y="540" width="100" height="540"/>
+    <rect x="600" y="380" width="180" height="700"/>
+    <rect x="820" y="480" width="140" height="600"/>
+    <rect x="1000" y="340" width="200" height="740"/>
+    <rect x="1240" y="500" width="120" height="580"/>
+    <rect x="1400" y="420" width="160" height="660"/>
+    <rect x="1600" y="540" width="100" height="540"/>
+    <rect x="1740" y="460" width="140" height="620"/>
+  </g>
+  <g fill="#ffd166" opacity="0.85">
+    <rect x="120" y="540" width="14" height="14"/>
+    <rect x="160" y="600" width="14" height="14"/>
+    <rect x="280" y="460" width="14" height="14"/>
+    <rect x="340" y="540" width="14" height="14"/>
+    <rect x="480" y="580" width="14" height="14"/>
+    <rect x="620" y="420" width="14" height="14"/>
+    <rect x="700" y="500" width="14" height="14"/>
+    <rect x="840" y="520" width="14" height="14"/>
+    <rect x="900" y="600" width="14" height="14"/>
+    <rect x="1040" y="380" width="14" height="14"/>
+    <rect x="1100" y="460" width="14" height="14"/>
+    <rect x="1160" y="540" width="14" height="14"/>
+    <rect x="1260" y="540" width="14" height="14"/>
+    <rect x="1420" y="460" width="14" height="14"/>
+    <rect x="1500" y="540" width="14" height="14"/>
+    <rect x="1620" y="580" width="14" height="14"/>
+    <rect x="1760" y="500" width="14" height="14"/>
+    <rect x="1820" y="600" width="14" height="14"/>
+  </g>
+</svg>

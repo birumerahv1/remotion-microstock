@@ -1,0 +1,36 @@
+{
+  "name": "remotion-microstock",
+  "version": "1.0.0",
+  "description": "Remotion video templates for microstock content with image reference support",
+  "private": true,
+  "scripts": {
+    "start": "remotion studio",
+    "build": "remotion render",
+    "render": "remotion render",
+    "render:kenburns": "remotion render KenBurns out/kenburns.mp4",
+    "render:parallax": "remotion render Parallax out/parallax.mp4",
+    "render:reveal": "remotion render ImageReveal out/reveal.mp4",
+    "render:slideshow": "remotion render Slideshow out/slideshow.mp4",
+    "render:showcase": "remotion render ProductShowcase out/showcase.mp4",
+    "upgrade": "remotion upgrade",
+    "tsc": "tsc",
+    "typecheck": "tsc --noEmit",
+    "lint": "tsc --noEmit"
+  },
+  "repository": {},
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@remotion/cli": "4.0.464",
+    "@remotion/player": "4.0.464",
+    "react": "19.2.6",
+    "react-dom": "19.2.6",
+    "remotion": "4.0.464",
+    "zod": "4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "25.9.1",
+    "@types/react": "19.2.15",
+    "@types/web": "0.0.349",
+    "typescript": "5.7.3"
+  }
+}

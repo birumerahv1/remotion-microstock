@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
+  <defs>
+    <radialGradient id="bg4" cx="0.5" cy="0.5" r="0.7">
+      <stop offset="0%" stop-color="#2b3a55"/>
+      <stop offset="100%" stop-color="#0b1424"/>
+    </radialGradient>
+    <linearGradient id="device" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e6e9ef"/>
+      <stop offset="100%" stop-color="#8a93a6"/>
+    </linearGradient>
+    <linearGradient id="screen" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#22d3ee"/>
+      <stop offset="100%" stop-color="#7c3aed"/>
+    </linearGradient>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#bg4)"/>
+  <g transform="translate(560 240)">
+    <rect width="800" height="600" rx="40" ry="40" fill="url(#device)" stroke="#1a1f2c" stroke-width="6"/>
+    <rect x="40" y="40" width="720" height="520" rx="20" ry="20" fill="url(#screen)"/>
+    <g fill="white" opacity="0.85">
+      <rect x="80" y="80" width="240" height="20" rx="6"/>
+      <rect x="80" y="120" width="400" height="14" rx="5"/>
+      <circle cx="600" cy="120" r="36" />
+    </g>
+    <g fill="white" opacity="0.5">
+      <rect x="80" y="220" width="640" height="60" rx="10"/>
+      <rect x="80" y="300" width="640" height="60" rx="10"/>
+      <rect x="80" y="380" width="640" height="60" rx="10"/>
+      <rect x="80" y="460" width="280" height="60" rx="10"/>
+    </g>
+  </g>
+  <ellipse cx="960" cy="900" rx="380" ry="36" fill="#000" opacity="0.45"/>
+</svg>
