@@ -1,0 +1,3 @@
+# remotion-microstock
+
+Initial scaffold.
