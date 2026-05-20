@@ -22,14 +22,15 @@
   "dependencies": {
     "@remotion/cli": "4.0.464",
     "@remotion/player": "4.0.464",
-    "react": "19.2.6",
-    "react-dom": "19.2.6",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
     "remotion": "4.0.464",
     "zod": "4.3.6"
   },
   "devDependencies": {
     "@types/node": "25.9.1",
-    "@types/react": "19.2.15",
+    "@types/react": "18.3.12",
+    "@types/react-dom": "18.3.1",
     "@types/web": "0.0.349",
     "typescript": "5.7.3"
   }
