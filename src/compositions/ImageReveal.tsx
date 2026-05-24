@@ -9,6 +9,11 @@ import {
 import { z } from "zod";
 import { ReferenceImage } from "../components/ReferenceImage";
 import { imageReferenceSchema } from "../utils/imageReference";
+import {
+  AnimatedText,
+  animatedTextStyleSchema,
+} from "../components/AnimatedText";
+import { LetterboxBars, NoiseGrain } from "../components/Overlays";
 
 export const imageRevealSchema = z.object({
   reference: imageReferenceSchema,
@@ -18,6 +23,9 @@ export const imageRevealSchema = z.object({
   accentColor: z.string().default("#f5a623"),
   title: z.string().default("Reveal"),
   subtitle: z.string().optional(),
+  titleStyle: animatedTextStyleSchema.default("wipe"),
+  letterbox: z.boolean().default(true),
+  grain: z.boolean().default(true),
 });
 
 export type ImageRevealProps = z.infer<typeof imageRevealSchema>;
@@ -28,6 +36,9 @@ export const ImageReveal: React.FC<ImageRevealProps> = ({
   accentColor,
   title,
   subtitle,
+  titleStyle,
+  letterbox,
+  grain,
 }) => {
   const frame = useCurrentFrame();
   const { fps, durationInFrames } = useVideoConfig();
@@ -59,18 +70,25 @@ export const ImageReveal: React.FC<ImageRevealProps> = ({
     }
   };
 
-  const titleY = interpolate(
-    frame,
-    [durationInFrames * 0.5, durationInFrames * 0.7],
-    [80, 0],
+  const accentBarHeight = interpolate(
+    reveal,
+    [0.4, 1],
+    [0, 80],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
   );
-  const titleOpacity = interpolate(
-    frame,
-    [durationInFrames * 0.5, durationInFrames * 0.65, durationInFrames - 10],
-    [0, 1, 1],
+
+  // Pulse the accent bar after it has fully drawn in.
+  const accentPulse =
+    0.7 + 0.3 * Math.sin((frame - durationInFrames * 0.6) * 0.18);
+  const accentOpacity = interpolate(
+    reveal,
+    [0.4, 1],
+    [0, Math.max(0.6, Math.min(1, accentPulse))],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
   );
+
+  const titleStartFrame = Math.round(durationInFrames * 0.55);
+  const subtitleStartFrame = titleStartFrame + 18;
 
   return (
     <AbsoluteFill style={{ backgroundColor: "#0a0a0a", overflow: "hidden" }}>
@@ -81,56 +99,73 @@ export const ImageReveal: React.FC<ImageRevealProps> = ({
       <AbsoluteFill
         style={{
           background:
-            "linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 50%)",
+            "linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0) 50%)",
           pointerEvents: "none",
         }}
       />
 
+      {letterbox ? (
+        <LetterboxBars height={100} slideInFrames={18} slideOut />
+      ) : null}
+
       <AbsoluteFill
         style={{
           justifyContent: "flex-end",
-          padding: "0 0 100px 100px",
-          opacity: titleOpacity,
-          transform: `translateY(${titleY}px)`,
+          padding: "0 0 110px 100px",
+          alignItems: "flex-start",
+          pointerEvents: "none",
         }}
       >
         <div
           style={{
             width: 8,
-            height: 80,
+            height: accentBarHeight,
             backgroundColor: accentColor,
+            opacity: accentOpacity,
             marginBottom: 24,
+            boxShadow: `0 0 12px ${accentColor}`,
           }}
         />
-        <div
-          style={{
-            color: "white",
-            fontSize: 96,
-            fontWeight: 800,
-            fontFamily:
-              "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
-            letterSpacing: 1,
-            textShadow: "0 4px 24px rgba(0,0,0,0.6)",
-          }}
-        >
-          {title}
-        </div>
-        {subtitle ? (
-          <div
-            style={{
-              color: "rgba(255,255,255,0.85)",
-              fontSize: 36,
-              marginTop: 16,
-              fontFamily:
-                "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
-              fontWeight: 400,
-              letterSpacing: 1,
-            }}
-          >
-            {subtitle}
-          </div>
-        ) : null}
       </AbsoluteFill>
+
+      <AnimatedText
+        text={title}
+        animation={titleStyle}
+        startFrame={titleStartFrame}
+        durationFrames={26}
+        fadeOut={false}
+        fontSize={108}
+        fontWeight={800}
+        letterSpacing={1}
+        textAlign="left"
+        containerStyle={{
+          justifyContent: "flex-end",
+          alignItems: "flex-start",
+          padding: "0 0 120px 100px",
+        }}
+      />
+
+      {subtitle ? (
+        <AnimatedText
+          text={subtitle}
+          animation="stagger-words"
+          startFrame={subtitleStartFrame}
+          durationFrames={32}
+          fadeOut={false}
+          fontSize={36}
+          fontWeight={500}
+          letterSpacing={2}
+          textAlign="left"
+          color="rgba(255,255,255,0.88)"
+          containerStyle={{
+            justifyContent: "flex-end",
+            alignItems: "flex-start",
+            padding: "0 0 70px 100px",
+          }}
+        />
+      ) : null}
+
+      {grain ? <NoiseGrain intensity={0.06} /> : null}
     </AbsoluteFill>
   );
 };

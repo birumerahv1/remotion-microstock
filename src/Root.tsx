@@ -19,6 +19,8 @@ import {
   ProductShowcase,
   productShowcaseSchema,
 } from "./compositions/ProductShowcase";
+import { TextHero, textHeroSchema } from "./compositions/TextHero";
+import { LowerThird, lowerThirdSchema } from "./compositions/LowerThird";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -45,7 +47,12 @@ export const RemotionRoot: React.FC = () => {
           endX: -40,
           endY: 0,
           vignette: true,
+          bokeh: true,
+          grain: true,
           title: "Mountain Sunrise",
+          subtitle: "Premium microstock footage",
+          titleStyle: "fade-up" as const,
+          subtitleStyle: "stagger-words" as const,
         }}
       />
 
@@ -64,11 +71,14 @@ export const RemotionRoot: React.FC = () => {
             focusY: 0.5,
             fit: "cover" as const,
           },
-          foreground: undefined,
           direction: "horizontal" as const,
           amplitude: 120,
           overlayColor: "rgba(0, 0, 0, 0.25)",
+          lightLeak: true,
+          particles: true,
           title: "Cinematic Parallax",
+          subtitle: "Layered depth with motion",
+          titleStyle: "rotate-in" as const,
         }}
       />
 
@@ -87,10 +97,13 @@ export const RemotionRoot: React.FC = () => {
             focusY: 0.5,
             fit: "cover" as const,
           },
-          revealStyle: "wipe-left" as const,
+          revealStyle: "wipe-right" as const,
           accentColor: "#f5a623",
           title: "Bold Reveal",
           subtitle: "Premium microstock footage",
+          titleStyle: "wipe" as const,
+          letterbox: true,
+          grain: true,
         }}
       />
 
@@ -129,6 +142,9 @@ export const RemotionRoot: React.FC = () => {
           transitionFrames: 30,
           zoomPerSlide: true,
           showCaption: true,
+          captionStyle: "fade-up" as const,
+          bokeh: true,
+          grain: true,
         }}
       />
 
@@ -152,6 +168,70 @@ export const RemotionRoot: React.FC = () => {
           productName: "AURORA X1",
           tagline: "Designed for creators",
           callToAction: "AVAILABLE NOW",
+          particles: true,
+          grain: true,
+        }}
+      />
+
+      <Composition
+        id="TextHero"
+        component={TextHero}
+        durationInFrames={VIDEO_DURATION_FRAMES}
+        fps={VIDEO_FPS}
+        width={VIDEO_WIDTH}
+        height={VIDEO_HEIGHT}
+        schema={textHeroSchema}
+        defaultProps={{
+          reference: {
+            src: SAMPLE_IMAGE_1,
+            focusX: 0.5,
+            focusY: 0.4,
+            fit: "cover" as const,
+          },
+          backgroundColor: "#0b1020",
+          overlayColor: "rgba(8, 12, 30, 0.55)",
+          accentColor: "#22d3ee",
+          eyebrow: "MICROSTOCK SERIES",
+          title: "Brand Story",
+          subtitle: "Crafted for creators who care",
+          callToAction: "WATCH NOW",
+          eyebrowAnimation: "slide-in-left" as const,
+          titleAnimation: "stagger-words" as const,
+          subtitleAnimation: "fade-up" as const,
+          cameraShake: true,
+          lightLeak: true,
+          bokeh: true,
+          particles: false,
+          letterbox: true,
+          grain: true,
+        }}
+      />
+
+      <Composition
+        id="LowerThird"
+        component={LowerThird}
+        durationInFrames={VIDEO_DURATION_FRAMES}
+        fps={VIDEO_FPS}
+        width={VIDEO_WIDTH}
+        height={VIDEO_HEIGHT}
+        schema={lowerThirdSchema}
+        defaultProps={{
+          reference: {
+            src: SAMPLE_IMAGE_3,
+            focusX: 0.5,
+            focusY: 0.4,
+            fit: "cover" as const,
+          },
+          backgroundColor: "#0f1115",
+          accentColor: "#ef4444",
+          barColor: "rgba(0, 0, 0, 0.85)",
+          name: "Jane Doe",
+          role: "Director of Photography",
+          socialHandle: "@janedoe.films",
+          nameAnimation: "slide-in-left" as const,
+          roleAnimation: "fade-up" as const,
+          bottomOffset: 140,
+          exitFrames: 30,
         }}
       />
     </>

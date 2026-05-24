@@ -12,12 +12,20 @@ import {
   imageReferenceSchema,
   ImageReference,
 } from "../utils/imageReference";
+import {
+  AnimatedText,
+  animatedTextStyleSchema,
+} from "../components/AnimatedText";
+import { BokehOverlay, NoiseGrain } from "../components/Overlays";
 
 export const slideshowSchema = z.object({
   references: z.array(imageReferenceSchema).min(1),
   transitionFrames: z.number().min(5).max(120).default(30),
   zoomPerSlide: z.boolean().default(true),
   showCaption: z.boolean().default(true),
+  captionStyle: animatedTextStyleSchema.default("fade-up"),
+  bokeh: z.boolean().default(true),
+  grain: z.boolean().default(true),
 });
 
 export type SlideshowProps = z.infer<typeof slideshowSchema>;
@@ -30,6 +38,7 @@ type SlideProps = {
   isLast: boolean;
   zoomPerSlide: boolean;
   showCaption: boolean;
+  captionStyle: z.infer<typeof animatedTextStyleSchema>;
 };
 
 const Slide: React.FC<SlideProps> = ({
@@ -40,6 +49,7 @@ const Slide: React.FC<SlideProps> = ({
   isLast,
   zoomPerSlide,
   showCaption,
+  captionStyle,
 }) => {
   const frame = useCurrentFrame();
 
@@ -77,29 +87,29 @@ const Slide: React.FC<SlideProps> = ({
         <ReferenceImage reference={reference} />
       </AbsoluteFill>
       {showCaption && reference.caption ? (
-        <AbsoluteFill
-          style={{
+        <AnimatedText
+          text={reference.caption}
+          animation={captionStyle}
+          startFrame={Math.max(0, transitionFrames)}
+          durationFrames={26}
+          fadeOut={false}
+          fontSize={44}
+          fontWeight={600}
+          letterSpacing={1.5}
+          textAlign="left"
+          containerStyle={{
             justifyContent: "flex-end",
             alignItems: "flex-start",
-            padding: "0 0 80px 80px",
+            padding: "0 0 90px 90px",
           }}
-        >
-          <div
-            style={{
-              padding: "16px 28px",
-              backgroundColor: "rgba(0,0,0,0.55)",
-              borderRadius: 8,
-              color: "white",
-              fontSize: 36,
-              fontWeight: 600,
-              fontFamily:
-                "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
-              letterSpacing: 0.5,
-            }}
-          >
-            {reference.caption}
-          </div>
-        </AbsoluteFill>
+          textStyle={{
+            padding: "18px 28px",
+            backgroundColor: "rgba(0,0,0,0.55)",
+            borderRadius: 10,
+            backdropFilter: "blur(8px)",
+            boxShadow: "0 12px 32px rgba(0,0,0,0.4)",
+          }}
+        />
       ) : null}
     </AbsoluteFill>
   );
@@ -110,6 +120,9 @@ export const Slideshow: React.FC<SlideshowProps> = ({
   transitionFrames,
   zoomPerSlide,
   showCaption,
+  captionStyle,
+  bokeh,
+  grain,
 }) => {
   const { durationInFrames } = useVideoConfig();
   const count = references.length;
@@ -140,9 +153,13 @@ export const Slideshow: React.FC<SlideshowProps> = ({
             isLast={index === count - 1}
             zoomPerSlide={zoomPerSlide}
             showCaption={showCaption}
+            captionStyle={captionStyle}
           />
         </Sequence>
       ))}
+
+      {bokeh ? <BokehOverlay count={10} intensity={0.25} /> : null}
+      {grain ? <NoiseGrain intensity={0.05} /> : null}
     </AbsoluteFill>
   );
 };

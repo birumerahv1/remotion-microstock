@@ -8,6 +8,11 @@ import {
 import { z } from "zod";
 import { ReferenceImage } from "../components/ReferenceImage";
 import { imageReferenceSchema } from "../utils/imageReference";
+import {
+  AnimatedText,
+  animatedTextStyleSchema,
+} from "../components/AnimatedText";
+import { LightLeak, ParticleField } from "../components/Overlays";
 
 export const parallaxSchema = z.object({
   background: imageReferenceSchema,
@@ -15,7 +20,11 @@ export const parallaxSchema = z.object({
   direction: z.enum(["horizontal", "vertical", "zoom"]).default("horizontal"),
   amplitude: z.number().min(20).max(400).default(120),
   overlayColor: z.string().default("rgba(0, 0, 0, 0.25)"),
+  lightLeak: z.boolean().default(true),
+  particles: z.boolean().default(true),
   title: z.string().optional(),
+  subtitle: z.string().optional(),
+  titleStyle: animatedTextStyleSchema.default("rotate-in"),
 });
 
 export type ParallaxProps = z.infer<typeof parallaxSchema>;
@@ -26,7 +35,11 @@ export const Parallax: React.FC<ParallaxProps> = ({
   direction,
   amplitude,
   overlayColor,
+  lightLeak,
+  particles,
   title,
+  subtitle,
+  titleStyle,
 }) => {
   const frame = useCurrentFrame();
   const { durationInFrames } = useVideoConfig();
@@ -46,13 +59,6 @@ export const Parallax: React.FC<ParallaxProps> = ({
   const fgTranslateX = bgTranslateX * 0.4;
   const fgTranslateY = bgTranslateY * 0.4;
   const fgScale = direction === "zoom" ? interpolate(eased, [0, 1], [1, 1.08]) : 1;
-
-  const titleOpacity = interpolate(
-    frame,
-    [0, 25, durationInFrames - 30, durationInFrames - 10],
-    [0, 1, 1, 0],
-    { extrapolateRight: "clamp", extrapolateLeft: "clamp" },
-  );
 
   return (
     <AbsoluteFill style={{ backgroundColor: "#000", overflow: "hidden" }}>
@@ -79,31 +85,47 @@ export const Parallax: React.FC<ParallaxProps> = ({
 
       <AbsoluteFill style={{ backgroundColor: overlayColor, pointerEvents: "none" }} />
 
+      {particles ? <ParticleField count={45} intensity={0.55} /> : null}
+
+      {lightLeak ? <LightLeak intensity={0.55} /> : null}
+
       {title ? (
-        <AbsoluteFill
-          style={{
+        <AnimatedText
+          text={title}
+          animation={titleStyle}
+          startFrame={10}
+          durationFrames={40}
+          fadeOut
+          fadeOutAt={20}
+          fontSize={96}
+          fontWeight={800}
+          letterSpacing={4}
+          containerStyle={{
             justifyContent: "center",
             alignItems: "center",
-            opacity: titleOpacity,
+            padding: subtitle ? "0 0 90px 0" : 0,
           }}
-        >
-          <div
-            style={{
-              color: "white",
-              fontSize: 88,
-              fontWeight: 800,
-              fontFamily:
-                "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
-              letterSpacing: 4,
-              textShadow: "0 6px 32px rgba(0,0,0,0.7)",
-              textAlign: "center",
-              padding: "0 80px",
-              maxWidth: 1600,
-            }}
-          >
-            {title}
-          </div>
-        </AbsoluteFill>
+        />
+      ) : null}
+
+      {subtitle ? (
+        <AnimatedText
+          text={subtitle}
+          animation="stagger-words"
+          startFrame={40}
+          durationFrames={50}
+          fadeOut
+          fadeOutAt={20}
+          fontSize={34}
+          fontWeight={500}
+          letterSpacing={3}
+          color="rgba(255,255,255,0.9)"
+          containerStyle={{
+            justifyContent: "center",
+            alignItems: "center",
+            paddingTop: 200,
+          }}
+        />
       ) : null}
     </AbsoluteFill>
   );
