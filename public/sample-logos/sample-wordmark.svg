@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 200" width="800" height="200">
+  <defs>
+    <linearGradient id="wmg" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#22d3ee"/>
+      <stop offset="100%" stop-color="#a855f7"/>
+    </linearGradient>
+  </defs>
+  <rect x="40" y="60" width="80" height="80" rx="16" fill="url(#wmg)"/>
+  <text x="150" y="130" font-family="Helvetica, Arial, sans-serif" font-weight="900" font-size="100" fill="#ffffff" letter-spacing="-4">AURORA</text>
+</svg>

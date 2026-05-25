@@ -14,6 +14,10 @@ import {
   animatedTextStyleSchema,
 } from "../components/AnimatedText";
 import {
+  AnimatedLogo,
+  animatedLogoStyleSchema,
+} from "../components/AnimatedLogo";
+import {
   BokehOverlay,
   CameraShake,
   GlowPulse,
@@ -46,6 +50,12 @@ export const textHeroSchema = z.object({
   titleAnimation: animatedTextStyleSchema.default("stagger-words"),
   subtitleAnimation: animatedTextStyleSchema.default("fade-up"),
 
+  /** Optional brand logo shown above the eyebrow. Leave empty to hide. */
+  logoSrc: z.string().default(""),
+  logoAnimation: animatedLogoStyleSchema.default("stamp"),
+  logoWidth: z.number().min(40).default(140),
+  logoStartFrame: z.number().min(0).default(0),
+
   /** Subtle camera shake on the entire scene (great for impact intros). */
   cameraShake: z.boolean().default(true),
   lightLeak: z.boolean().default(true),
@@ -69,6 +79,10 @@ export const TextHero: React.FC<TextHeroProps> = ({
   eyebrowAnimation,
   titleAnimation,
   subtitleAnimation,
+  logoSrc,
+  logoAnimation,
+  logoWidth,
+  logoStartFrame,
   cameraShake,
   lightLeak,
   bokeh,
@@ -129,6 +143,23 @@ export const TextHero: React.FC<TextHeroProps> = ({
         <ParticleField count={50} color={accentColor} intensity={0.5} />
       ) : null}
       {lightLeak ? <LightLeak intensity={0.45} /> : null}
+
+      {/* Optional brand logo */}
+      {logoSrc ? (
+        <AnimatedLogo
+          src={logoSrc}
+          animation={logoAnimation}
+          startFrame={logoStartFrame}
+          durationFrames={28}
+          width={logoWidth}
+          glowColor={accentColor}
+          containerStyle={{
+            alignItems: "center",
+            justifyContent: "flex-start",
+            paddingTop: 180,
+          }}
+        />
+      ) : null}
 
       {/* Eyebrow */}
       <AnimatedText

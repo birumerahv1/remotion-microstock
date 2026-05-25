@@ -9,6 +9,8 @@ import {
   SAMPLE_IMAGE_2,
   SAMPLE_IMAGE_3,
   SAMPLE_IMAGE_4,
+  SAMPLE_LOGO_MARK,
+  SAMPLE_LOGO_WORDMARK,
 } from "./constants";
 
 import { KenBurns, kenBurnsSchema } from "./compositions/KenBurns";
@@ -21,6 +23,7 @@ import {
 } from "./compositions/ProductShowcase";
 import { TextHero, textHeroSchema } from "./compositions/TextHero";
 import { LowerThird, lowerThirdSchema } from "./compositions/LowerThird";
+import { LogoReveal, logoRevealSchema } from "./compositions/LogoReveal";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -196,8 +199,12 @@ export const RemotionRoot: React.FC = () => {
           subtitle: "Crafted for creators who care",
           callToAction: "WATCH NOW",
           eyebrowAnimation: "slide-in-left" as const,
-          titleAnimation: "stagger-words" as const,
+          titleAnimation: "bounce-in" as const,
           subtitleAnimation: "fade-up" as const,
+          logoSrc: SAMPLE_LOGO_MARK,
+          logoAnimation: "stamp" as const,
+          logoWidth: 140,
+          logoStartFrame: 0,
           cameraShake: true,
           lightLeak: true,
           bokeh: true,
@@ -230,8 +237,41 @@ export const RemotionRoot: React.FC = () => {
           socialHandle: "@janedoe.films",
           nameAnimation: "slide-in-left" as const,
           roleAnimation: "fade-up" as const,
+          logoSrc: SAMPLE_LOGO_MARK,
+          logoAnimation: "fade-glow" as const,
+          logoWidth: 120,
           bottomOffset: 140,
           exitFrames: 30,
+        }}
+      />
+
+      <Composition
+        id="LogoReveal"
+        component={LogoReveal}
+        durationInFrames={VIDEO_DURATION_FRAMES}
+        fps={VIDEO_FPS}
+        width={VIDEO_WIDTH}
+        height={VIDEO_HEIGHT}
+        schema={logoRevealSchema}
+        defaultProps={{
+          logoSrc: SAMPLE_LOGO_MARK,
+          logoAnimation: "stamp" as const,
+          logoWidth: 420,
+          backgroundColor: "#0b1020",
+          backgroundGradient: true,
+          accentColor: "#22d3ee",
+          tagline: "MICROSTOCK VISUAL STUDIO",
+          taglineAnimation: "fade-up" as const,
+          showAccentBar: true,
+          logoStartFrame: 8,
+          logoDurationFrames: 36,
+          taglineStartFrame: 56,
+          bokeh: true,
+          particles: false,
+          lightLeak: true,
+          letterbox: false,
+          grain: true,
+          vignette: true,
         }}
       />
     </>

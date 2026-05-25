@@ -13,6 +13,10 @@ import {
   AnimatedText,
   animatedTextStyleSchema,
 } from "../components/AnimatedText";
+import {
+  AnimatedLogo,
+  animatedLogoStyleSchema,
+} from "../components/AnimatedLogo";
 import { easeInOut, easeOut } from "../utils/animations";
 
 /**
@@ -36,6 +40,11 @@ export const lowerThirdSchema = z.object({
   nameAnimation: animatedTextStyleSchema.default("slide-in-left"),
   roleAnimation: animatedTextStyleSchema.default("fade-up"),
 
+  /** Optional brand logo shown in the top-right corner. Leave empty to hide. */
+  logoSrc: z.string().default(""),
+  logoAnimation: animatedLogoStyleSchema.default("fade-glow"),
+  logoWidth: z.number().min(40).default(120),
+
   /** Position of the lower-third on screen (vertical offset from bottom in px). */
   bottomOffset: z.number().min(0).default(140),
   /** Stay visible until this many frames before the end, then slide out. */
@@ -54,6 +63,9 @@ export const LowerThird: React.FC<LowerThirdProps> = ({
   socialHandle,
   nameAnimation,
   roleAnimation,
+  logoSrc,
+  logoAnimation,
+  logoWidth,
   bottomOffset,
   exitFrames,
 }) => {
@@ -197,6 +209,33 @@ export const LowerThird: React.FC<LowerThirdProps> = ({
           />
         </div>
       </div>
+
+      {/* Optional brand logo (top-right corner) */}
+      {logoSrc ? (
+        <AbsoluteFill
+          style={{
+            alignItems: "flex-end",
+            justifyContent: "flex-start",
+            padding: 80,
+            pointerEvents: "none",
+            opacity: 1 - exitProgress,
+          }}
+        >
+          <AnimatedLogo
+            src={logoSrc}
+            animation={logoAnimation}
+            startFrame={2}
+            durationFrames={26}
+            width={logoWidth}
+            glowColor={accentColor}
+            containerStyle={{
+              position: "static",
+              width: logoWidth + 40,
+              height: logoWidth + 40,
+            }}
+          />
+        </AbsoluteFill>
+      ) : null}
 
       {/* Social handle */}
       {socialHandle ? (
