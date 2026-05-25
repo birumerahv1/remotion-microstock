@@ -73,6 +73,43 @@ Output H.264 + `yuv420p` + CRF 18 sudah dikonfigurasi di `remotion.config.ts` ag
 3. Geser `focusX` / `focusY` agar subjek tetap di frame saat zoom/pan.
 4. Render dengan `npm run render:<nama>` atau via CLI dengan `--props`.
 
+## Docker
+
+Build & jalankan Studio di container — tidak perlu install Node/npm di host.
+
+```bash
+# Build image
+docker build -t remotion-microstock .
+
+# Jalankan Studio (buka http://localhost:3000 di browser)
+docker run --rm -p 3000:3000 --shm-size=1g remotion-microstock
+
+# Render video (output ke folder out/ di host)
+docker run --rm -v "$PWD/out:/app/out" --shm-size=1g remotion-microstock \
+    npx remotion render KenBurns out/kenburns.mp4
+
+# Render dengan custom props
+docker run --rm -v "$PWD/out:/app/out" --shm-size=1g remotion-microstock \
+    npx remotion render LogoReveal out/logo.mp4 \
+    --props='{"tagline":"MY BRAND","logoAnimation":"spin-in"}'
+```
+
+Atau pakai **Docker Compose** (lebih praktis, sumber bisa live-edit):
+
+```bash
+# Studio (live-reload: edit src/ di host → langsung berubah di browser)
+docker compose up studio
+
+# Render satu komposisi (default: KenBurns)
+docker compose run --rm render
+
+# Render komposisi lain
+docker compose run --rm render LogoReveal out/logo.mp4
+docker compose run --rm render TextHero out/texthero.mp4
+```
+
+> **Catatan**: `--shm-size=1g` dibutuhkan agar Chromium (yang Remotion jalankan di belakang layar) tidak crash saat render frame 1920x1080.
+
 ## Tips Microstock
 
 - Hindari logo, wajah, dan tulisan brand di gambar referensi (alasan release).
