@@ -1,0 +1,43 @@
+services:
+  # Interactive Remotion Studio. Open http://localhost:3000 after `up`.
+  studio:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: remotion-microstock:latest
+    container_name: remotion-microstock-studio
+    ports:
+      - "3000:3000"
+    volumes:
+      # Live-edit source from the host; node_modules stays inside the image.
+      - ./src:/app/src
+      - ./public:/app/public
+      - ./remotion.config.ts:/app/remotion.config.ts
+      - ./out:/app/out
+    # Chromium inside the container occasionally needs extra shared-memory
+    # space when rendering 1920x1080 frames; bumping shm avoids crashes.
+    shm_size: "1gb"
+    # The studio binds to 0.0.0.0 by default in Docker; --no-open prevents it
+    # from trying to launch a browser inside the container.
+    command: ["npx", "remotion", "studio", "--no-open", "--port", "3000"]
+
+  # One-shot CLI render. Usage:
+  #   docker compose run --rm render KenBurns out/kenburns.mp4
+  # Or with custom props:
+  #   docker compose run --rm render LogoReveal out/logo.mp4 \
+  #     --props='{"tagline":"MY BRAND"}'
+  render:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: remotion-microstock:latest
+    container_name: remotion-microstock-render
+    volumes:
+      - ./src:/app/src
+      - ./public:/app/public
+      - ./remotion.config.ts:/app/remotion.config.ts
+      - ./out:/app/out
+    shm_size: "1gb"
+    entrypoint: ["npx", "remotion", "render"]
+    # Default args render the KenBurns composition; override on the CLI.
+    command: ["KenBurns", "out/kenburns.mp4"]

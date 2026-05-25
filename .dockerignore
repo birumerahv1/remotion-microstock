@@ -1,0 +1,15 @@
+node_modules
+out
+.git
+.cache
+.DS_Store
+.idea
+.vscode
+*.log
+.agents
+test-artifacts
+TEST_PLAN*.md
+test-report*.md
+Dockerfile
+docker-compose*.yml
+.dockerignore
