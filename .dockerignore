@@ -1,0 +1,17 @@
+node_modules
+build
+out
+.git
+.gitignore
+.dockerignore
+.eslintrc.cjs
+.prettierrc
+README.md
+Dockerfile
+docker-compose.yml
+*.log
+.env
+.env.local
+.vscode
+.idea
+coverage

@@ -1,0 +1,42 @@
+{
+  "name": "remotion-microstock",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Programmatic Remotion video generation platform for microstock. Compose with React, render via Docker.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "render": "tsx scripts/render.ts",
+    "batch": "tsx scripts/batch-render.ts",
+    "list": "remotion compositions src/index.ts",
+    "build": "remotion bundle src/index.ts --output=build",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint . --ext .ts,.tsx",
+    "format": "prettier --write \"**/*.{ts,tsx,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,json,md}\""
+  },
+  "dependencies": {
+    "@remotion/bundler": "4.0.466",
+    "@remotion/cli": "4.0.466",
+    "@remotion/renderer": "4.0.466",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "remotion": "4.0.466",
+    "zod": "4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "20.14.10",
+    "@types/react": "18.3.3",
+    "@types/react-dom": "18.3.0",
+    "@typescript-eslint/eslint-plugin": "7.16.1",
+    "@typescript-eslint/parser": "7.16.1",
+    "eslint": "8.57.0",
+    "prettier": "3.3.3",
+    "tsx": "4.16.2",
+    "typescript": "5.5.3"
+  }
+}
