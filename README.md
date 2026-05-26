@@ -125,3 +125,61 @@ npm run video-to-tsx -- -i ./raw/loop.mp4 -n LoopFrames --no-register
 # also emit a JSON manifest for downstream tooling
 npm run video-to-tsx -- -i ./raw/loop.mp4 -n LoopFrames --manifest ./out/loop-frames.json
 ```
+
+## `build:showcase` — static MP4 gallery for Vercel
+
+After you've rendered compositions to `out/`, run the `build:showcase`
+script to bundle them into a static dark-themed gallery page at
+`web/dist/index.html`. The site is plain HTML/CSS — no framework, no
+runtime — so it deploys to Vercel (or any static host) instantly.
+
+### Workflow
+
+```bash
+# 1. Render whatever compositions you want into out/
+npx remotion render src/index.ts MyClip out/MyClip.mp4
+npx remotion render src/index.ts AnotherClip out/AnotherClip.mp4
+
+# 2. Build the static showcase (reads out/, writes web/dist/)
+npm run build:showcase
+
+# 3. Deploy
+npm run deploy            # invokes `vercel deploy` (see vercel.json)
+# or, for production:
+vercel deploy --prod
+```
+
+The build step copies every `*.mp4` from `out/` into
+`web/dist/videos/`, probes each one for dimensions / fps / duration /
+file size via `ffprobe`, and renders a responsive card grid. If a
+sibling poster image (`<name>.jpg|.jpeg|.png|.webp`) exists next to an
+MP4 it's used as the `<video poster>`.
+
+If `out/` is empty the showcase still builds — it just shows a friendly
+placeholder explaining how to render the first reel.
+
+### Flags
+
+| Flag                     | Default                                 | Description                          |
+|--------------------------|-----------------------------------------|--------------------------------------|
+| `-i, --input <dir>`      | `out`                                   | Directory to scan for `*.mp4`.       |
+| `-o, --output <dir>`     | `web/dist`                              | Static site output directory.        |
+| `-t, --title <string>`   | `Remotion Microstock — Reel showcase`   | Page `<h1>` + `<title>`.             |
+| `--base-href <p>`        | `""`                                    | Prefix asset URLs with a `<base href>`. Useful when hosting under a subpath. |
+
+### Vercel configuration
+
+[`vercel.json`](./vercel.json) declares the project as a pure static
+site (no framework, no build command on the Vercel side) and points the
+`outputDirectory` at `web/dist`. It also sets long-cache headers on
+`/videos/*` and `no-cache` on `*.html` so updates appear immediately.
+
+Vercel will not render compositions for you — rendering needs ffmpeg
+and a headless Chromium. Run `npm run build:showcase` locally first,
+then `vercel deploy`; the CLI uploads the prebuilt `web/dist/` content.
+
+If you want auto-deploy on every push, link the GitHub repo in Vercel
+and point its **Root Directory** at the repo root with the same
+`outputDirectory: web/dist` — but you'll still need to commit the
+`web/dist/` artifacts (or render them in CI with a separate workflow)
+since the default Vercel build environment can't run Remotion.

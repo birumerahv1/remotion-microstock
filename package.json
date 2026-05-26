@@ -8,6 +8,8 @@
     "build": "remotion render",
     "upgrade": "remotion upgrade",
     "video-to-tsx": "node scripts/video-to-tsx.mjs",
+    "build:showcase": "node scripts/build-showcase.mjs",
+    "deploy": "vercel deploy",
     "tsc": "tsc --noEmit"
   },
   "dependencies": {

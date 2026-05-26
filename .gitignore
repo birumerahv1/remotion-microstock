@@ -6,6 +6,10 @@ out
 .tsbuildinfo
 *.tsbuildinfo
 
+# Showcase build output and Vercel local state
+web/dist
+.vercel
+
 # Generated video assets (large binary files should not be committed)
 # Generated frame extractions: public/<composition>/frames/
 # Generated video copies:      public/<composition>/source.*
