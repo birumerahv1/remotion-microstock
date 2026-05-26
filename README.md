@@ -44,6 +44,18 @@ docker-compose.yml          `render` + `studio` services
 - For local rendering: a recent Chromium / Chrome will be downloaded by Remotion on first run.
 - For Docker rendering: Docker 24+ with at least 2 GB shared memory.
 
+## How to run
+
+Pick whichever path matches your environment — full details in [docs/RUNNING.md](docs/RUNNING.md):
+
+1. **Local Node.js** (recommended for development) — `npm install && npm run studio`.
+2. **GitHub Actions** (no install at all) — open the **Actions** tab, run the **Render**
+   workflow, download the MP4 as an artifact.
+3. **GitHub Codespaces** — open the repo in a cloud VS Code; deps are pre-installed via
+   `.devcontainer/`.
+4. **Docker / Compose** — see the [Docker](#docker) section below.
+5. **Remotion Lambda** — for serverless / production-scale rendering.
+
 ## Install
 
 ```bash
