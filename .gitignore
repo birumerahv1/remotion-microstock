@@ -1,0 +1,18 @@
+node_modules
+out
+.cache
+*.log
+.DS_Store
+.tsbuildinfo
+*.tsbuildinfo
+
+# Generated video assets (large binary files should not be committed)
+# Generated frame extractions: public/<composition>/frames/
+# Generated video copies:      public/<composition>/source.*
+# If you want a particular composition's assets committed, add an explicit
+# negation rule below the patterns.
+public/**/frames/
+public/**/source.mp4
+public/**/source.webm
+public/**/source.mov
+public/**/source.mkv
