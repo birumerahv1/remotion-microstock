@@ -1,0 +1,63 @@
+{
+  "outDir": "out/batch",
+  "concurrency": null,
+  "quality": "high",
+  "jobs": [
+    {
+      "composition": "AbstractGradient",
+      "name": "gradient-sunset-01",
+      "props": { "palette": "sunset", "seed": 1, "blobCount": 6, "title": "Sunset" }
+    },
+    {
+      "composition": "AbstractGradient",
+      "name": "gradient-ocean-02",
+      "props": { "palette": "ocean", "seed": 7, "blobCount": 8, "title": "Ocean" }
+    },
+    {
+      "composition": "AbstractGradient",
+      "name": "gradient-cyber-03",
+      "props": { "palette": "cyber", "seed": 11, "blobCount": 5, "title": "Cyber Dream" }
+    },
+    {
+      "composition": "TypographyKinetic",
+      "name": "type-create",
+      "props": { "palette": "cyber", "lines": ["CREATE", "EVERY", "SECOND"], "accentWordIndex": 1 }
+    },
+    {
+      "composition": "TypographyKinetic",
+      "name": "type-design",
+      "props": { "palette": "mono", "lines": ["DESIGN", "IN", "MOTION"], "accentWordIndex": 2 }
+    },
+    {
+      "composition": "GeometricLoop",
+      "name": "geom-hexagon",
+      "props": { "palette": "ocean", "shape": "hexagon", "ringCount": 6, "shapesPerRing": 14 }
+    },
+    {
+      "composition": "GeometricLoop",
+      "name": "geom-triangle",
+      "props": { "palette": "forest", "shape": "triangle", "ringCount": 8, "shapesPerRing": 18 }
+    },
+    {
+      "composition": "ProductShowcase",
+      "name": "product-aurora",
+      "props": {
+        "palette": "mono",
+        "productName": "Aurora Headphones",
+        "tagline": "Sound, redefined.",
+        "price": "$249",
+        "glyph": "A"
+      }
+    },
+    {
+      "composition": "DataViz",
+      "name": "dataviz-growth",
+      "props": {
+        "palette": "forest",
+        "title": "Quarterly Growth",
+        "subtitle": "Active users · in millions",
+        "unit": "M"
+      }
+    }
+  ]
+}

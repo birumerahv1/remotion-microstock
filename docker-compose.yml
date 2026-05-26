@@ -1,0 +1,36 @@
+services:
+  render:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: remotion-microstock:latest
+    container_name: remotion-microstock-render
+    init: true
+    shm_size: "2gb"
+    volumes:
+      - ./out:/app/out
+      - ./variants:/app/variants:ro
+    environment:
+      NODE_ENV: production
+    # Default command renders AbstractGradient. Override at runtime:
+    #   docker compose run --rm render npm run render -- TypographyKinetic
+    #   docker compose run --rm render npm run batch -- variants/example.json
+    command: ["npm", "run", "render", "--", "AbstractGradient"]
+
+  studio:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: remotion-microstock:latest
+    container_name: remotion-microstock-studio
+    init: true
+    shm_size: "2gb"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./src:/app/src
+      - ./variants:/app/variants
+      - ./out:/app/out
+    environment:
+      NODE_ENV: development
+    command: ["npm", "run", "studio", "--", "--host=0.0.0.0", "--port=3000"]
