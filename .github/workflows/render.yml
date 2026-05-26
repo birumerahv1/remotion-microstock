@@ -1,0 +1,122 @@
+name: Render
+
+on:
+  workflow_dispatch:
+    inputs:
+      composition:
+        description: Composition id (AbstractGradient, TypographyKinetic, GeometricLoop, ProductShowcase, DataViz)
+        required: true
+        default: AbstractGradient
+        type: choice
+        options:
+          - AbstractGradient
+          - TypographyKinetic
+          - GeometricLoop
+          - ProductShowcase
+          - DataViz
+      props:
+        description: 'Inline JSON props passed to the composition (e.g. {"palette":"ocean","seed":7})'
+        required: false
+        default: "{}"
+        type: string
+      quality:
+        description: Render quality (high | medium | low)
+        required: false
+        default: high
+        type: choice
+        options:
+          - high
+          - medium
+          - low
+      start:
+        description: Start frame (optional)
+        required: false
+        default: ""
+        type: string
+      end:
+        description: End frame (optional, pair with start)
+        required: false
+        default: ""
+        type: string
+      batch:
+        description: Run batch from variants/example.json instead of single render
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  render:
+    name: ${{ inputs.batch && 'batch render' || format('render {0}', inputs.composition) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install system deps for headless Chromium + ffmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            ffmpeg \
+            libnss3 libatk1.0-0 libatk-bridge2.0-0 libcups2 \
+            libxcomposite1 libxdamage1 libxfixes3 libxrandr2 \
+            libgbm1 libpango-1.0-0 libpangocairo-1.0-0 \
+            libasound2t64 libatspi2.0-0 libdrm2 libxkbcommon0 \
+            libxshmfence1 libx11-xcb1 libxcb1 \
+            fonts-liberation fonts-noto-color-emoji fonts-noto-cjk fonts-dejavu-core
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Pre-warm Remotion Chrome
+        run: npx --yes remotion browser ensure
+
+      - name: Render (single composition)
+        if: ${{ !inputs.batch }}
+        env:
+          PROPS: ${{ inputs.props }}
+          START: ${{ inputs.start }}
+          END: ${{ inputs.end }}
+        run: |
+          ARGS=("${{ inputs.composition }}" "--quality=${{ inputs.quality }}" "--out=out/${{ inputs.composition }}.mp4")
+          if [ -n "$PROPS" ] && [ "$PROPS" != "{}" ]; then
+            ARGS+=("--props=$PROPS")
+          fi
+          if [ -n "$START" ]; then
+            ARGS+=("--start=$START")
+          fi
+          if [ -n "$END" ]; then
+            ARGS+=("--end=$END")
+          fi
+          echo "Running: npm run render -- ${ARGS[@]}"
+          npm run render -- "${ARGS[@]}"
+
+      - name: Batch render
+        if: ${{ inputs.batch }}
+        run: npm run batch -- variants/example.json
+
+      - name: Show output files
+        run: |
+          ls -lh out/ || true
+          ls -lhR out/batch/ 2>/dev/null || true
+
+      - name: Upload rendered video(s)
+        uses: actions/upload-artifact@v4
+        with:
+          name: remotion-render-${{ github.run_number }}
+          path: out/**/*.mp4
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload batch summary (when batch=true)
+        if: ${{ inputs.batch }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: remotion-batch-summary-${{ github.run_number }}
+          path: out/batch/_summary.json
+          if-no-files-found: warn
+          retention-days: 14

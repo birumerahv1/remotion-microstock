@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint-typecheck:
+    name: lint + typecheck
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+
+  smoke-render:
+    name: smoke render (AbstractGradient, 15 frames)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install system deps for headless Chromium + ffmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            ffmpeg \
+            libnss3 libatk1.0-0 libatk-bridge2.0-0 libcups2 \
+            libxcomposite1 libxdamage1 libxfixes3 libxrandr2 \
+            libgbm1 libpango-1.0-0 libpangocairo-1.0-0 \
+            libasound2t64 libatspi2.0-0 libdrm2 libxkbcommon0 \
+            libxshmfence1 libx11-xcb1 libxcb1 \
+            fonts-liberation fonts-noto-color-emoji fonts-noto-cjk fonts-dejavu-core
+
+      - run: npm ci
+      - run: npx --yes remotion browser ensure
+
+      - name: Render 15 frames of AbstractGradient
+        run: npm run render -- AbstractGradient --quality=low --start=0 --end=14 --out=out/smoke.mp4
+
+      - name: Verify output exists and is non-empty
+        run: |
+          test -s out/smoke.mp4
+          ls -lh out/smoke.mp4
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: smoke-render-${{ github.run_number }}
+          path: out/smoke.mp4
+          retention-days: 7
